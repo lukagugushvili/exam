@@ -10,24 +10,24 @@ interface Products {
   image: any;
 }
 
-const productsCard = ({
+const ProductsCard = ({
   id,
   title,
   price,
   description,
   category,
   image,
-}: Products) => {
+}: Products) => (
   <div>
     <h1>{title}</h1>
     <h2>{price}</h2>
-    <h3>description</h3>
-    <p>category</p>
-    <image values={image} />
-  </div>;
-};
+    <h3>{description}</h3>
+    <p>{category}</p>
+    <img src={image} alt={title} />
+  </div>
+);
 
-const Shop = () => {
+const Shop: React.FC = () => {
   const [data, setData] = useState<Products[]>([]);
 
   useEffect(() => {
@@ -37,8 +37,8 @@ const Shop = () => {
         if (!response.ok) {
           console.log("sorry");
         }
-        const resJson = response.json();
-        console.log(resJson);
+        const resJson = await response.json();
+        setData(resJson);
       } catch (error) {
         console.error("კიდევ რომ სცადო მაინც არ გამოვა");
       }
@@ -48,7 +48,9 @@ const Shop = () => {
 
   return (
     <div>
-      <h1>this is shop page</h1>
+      {data.map((item) => (
+        <ProductsCard key={item.id} {...item} />
+      ))}
     </div>
   );
 };
